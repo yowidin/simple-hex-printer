@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    name: build-all
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        os:
+          - windows-latest
+          - macos-10.15
+          - ubuntu-latest
+
+        preset:
+          - default
+          - asan
+          - tsan
+
+        exclude:
+          - os: windows-latest
+            preset: asan
+
+          - os: windows-latest
+            preset: tsan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Add Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Build native
+        run:  |
+          cmake --preset ${{ matrix.preset}}
+          cmake --build --preset ${{ matrix.preset}}
+          ctest --preset ${{ matrix.preset}}
+          
