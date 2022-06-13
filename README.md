@@ -18,12 +18,13 @@ set(CMAKE_CXX_STANDARD 14)
 include(FetchContent)
 FetchContent_Declare(
    shp
-   SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../
+   GIT_REPOSITORY https://github.com/yowidin/simple-hex-printer
+   GIT_TAG master
 )
 FetchContent_MakeAvailable(shp)
 
 add_executable(test main.cpp)
-target_link_libraries(test PRIVATE simple_hex_printer)
+target_link_libraries(test PRIVATE SimpleHexPrinter::library)
 ```
 
 When using the library from your code is fairly simple:
