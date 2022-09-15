@@ -120,3 +120,10 @@ TEST_CASE("Check ASCII Alignment", "[iterator_hex_writer]") {
                           "34 35        45");
    }
 }
+
+TEST_CASE("Check non ambiguous", "[iterator_hex_writer]") {
+   // hex_str call should be non-ambiguous
+   std::array<std::uint8_t, 2> v{};
+   auto result = shp::hex_str(v);
+   REQUIRE(!result.empty());
+}

@@ -358,6 +358,8 @@ private:
    }
 
    void do_print(std::ostream &os) const {
+      format_backup backup(os);
+
       print_state ps{*this};
       for (; ps.it != ps.end; ++ps.it) {
          // Print out, depending on whether the object being printed is a POD-struct or just an integral value.
@@ -525,10 +527,8 @@ hex(const T &v,
  * @return A HEX string representation of a value.
  */
 template <typename T, typename WithPrefix = Prefix, typename DoFill = Fill, typename InUpperCase = UpperCase>
-inline std::string hex_str(const T &value,
-                           const WithPrefix = WithPrefix{},
-                           const DoFill = DoFill{},
-                           const InUpperCase = InUpperCase{}) {
+inline typename std::enable_if<std::is_integral<T>::value, std::string>::type
+hex_str(const T &value, const WithPrefix = WithPrefix{}, const DoFill = DoFill{}, const InUpperCase = InUpperCase{}) {
    std::ostringstream os;
    os << integral_hex_writer<T, WithPrefix, DoFill, InUpperCase>{value};
    return os.str();

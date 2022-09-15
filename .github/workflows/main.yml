@@ -12,7 +12,8 @@ jobs:
       max-parallel: 3
       matrix:
         os:
-          - windows-latest
+          # Windows fails to start the test binary at all
+          # - windows-latest
           - macos-10.15
           - ubuntu-latest
 
@@ -39,5 +40,5 @@ jobs:
         run:  |
           cmake --preset ${{ matrix.preset}}
           cmake --build --preset ${{ matrix.preset}}
-          ctest --preset ${{ matrix.preset}}
+          ctest --preset ${{ matrix.preset}} --output-on-failure -V
           
