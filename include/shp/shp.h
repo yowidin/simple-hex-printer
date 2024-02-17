@@ -415,6 +415,11 @@ struct is_container<std::string> : std::true_type {
    using element_type = std::string::value_type;
 };
 
+template <typename T>
+struct is_container<std::initializer_list<T>> : std::true_type {
+   using element_type = T;
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 /// Helper functions for constructing a streamable object
 ////////////////////////////////////////////////////////////////////////////////
@@ -559,6 +564,25 @@ inline typename std::enable_if<is_container<ContainerT>::value
                                      decltype(std::cbegin(std::declval<ContainerT>()))>::value_type>::value,
                                std::string>::type
 hex_str(const ContainerT &cont,
+        const WithOffsets = WithOffsets{},
+        const WithNibbleSeparation = WithNibbleSeparation{},
+        const RowWidthValue = RowWidthValue{},
+        const WithASCII = WithASCII{},
+        const InUpperCase = InUpperCase{}) {
+   std::ostringstream os;
+   os << iterator_hex_writer<decltype(std::cbegin(cont)), WithOffsets, WithNibbleSeparation, RowWidthValue, WithASCII,
+                             InUpperCase>{std::cbegin(cont), std::cend(cont)};
+   return os.str();
+}
+
+template <typename ValueT,
+   typename WithOffsets = PrintOffsets,
+   typename WithNibbleSeparation = SeparateNibbles,
+   typename RowWidthValue = RowWidth<16>,
+   typename WithASCII = PrintASCII,
+   typename InUpperCase = UpperCase>
+inline typename std::enable_if<std::is_standard_layout<ValueT>::value, std::string>::type
+hex_str(std::initializer_list<ValueT> cont,
         const WithOffsets = WithOffsets{},
         const WithNibbleSeparation = WithNibbleSeparation{},
         const RowWidthValue = RowWidthValue{},

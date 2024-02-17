@@ -104,6 +104,31 @@ TEST_CASE("Full multiline printing", "[iterator_hex_writer]") {
          REQUIRE(result == expected);
       }
    }
+
+   SECTION("initializer_list") {
+      std::initializer_list<std::uint8_t> value = {0xDE, 0xAD, 0xBE, 0xEF};
+      const std::string expected{"DEADBEEF"};
+
+      SECTION("explicit") {
+         auto start = std::cbegin(value);
+         auto end = std::cend(value);
+         os << shp::iterator_hex_writer<decltype(start), shp::NoOffsets, shp::NoNibbleSeparation, shp::SingleRow,
+                                        shp::NoASCII, shp::UpperCase>{start, end};
+         REQUIRE(os.str() == expected);
+      }
+
+      SECTION("with helper") {
+         os << shp::hex(value, shp::NoOffsets{}, shp::NoNibbleSeparation{}, shp::SingleRow{}, shp::NoASCII{},
+                        shp::UpperCase{});
+         REQUIRE(os.str() == expected);
+      }
+
+      SECTION("Directly to string") {
+         auto result = shp::hex_str(value, shp::NoOffsets{}, shp::NoNibbleSeparation{}, shp::SingleRow{},
+                                    shp::NoASCII{}, shp::UpperCase{});
+         REQUIRE(result == expected);
+      }
+   }
 }
 
 TEST_CASE("Check ASCII Alignment", "[iterator_hex_writer]") {
@@ -125,5 +150,10 @@ TEST_CASE("Check non ambiguous", "[iterator_hex_writer]") {
    // hex_str call should be non-ambiguous
    std::array<std::uint8_t, 2> v{};
    auto result = shp::hex_str(v);
+   REQUIRE(!result.empty());
+}
+
+TEST_CASE("Initializer lists should work", "[iterator_hex_writer]") {
+   auto result = shp::hex_str({0xDE, 0xAD, 0xBE, 0xEF});
    REQUIRE(!result.empty());
 }
