@@ -157,3 +157,11 @@ TEST_CASE("Initializer lists should work", "[iterator_hex_writer]") {
    auto result = shp::hex_str({0xDE, 0xAD, 0xBE, 0xEF});
    REQUIRE(!result.empty());
 }
+
+TEST_CASE("Check bool vectors", "[iterator_hex_writer]") {
+   // Boolean vectors should be printable
+   ostringstream os;
+   std::vector<bool> v{true, false, true, true};
+   os << shp::hex(v, shp::NoOffsets{}, shp::NoNibbleSeparation{}, shp::SingleRow{}, shp::NoASCII{});
+   REQUIRE(os.str() == "01000101");
+}

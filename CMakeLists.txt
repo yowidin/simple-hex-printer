@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
-project(SimpleHexPrinter VERSION 0.1.1)
+project(SimpleHexPrinter VERSION 0.1.2)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)

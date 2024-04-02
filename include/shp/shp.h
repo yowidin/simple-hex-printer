@@ -129,6 +129,20 @@ private:
    T value_; //!< Value to be printed
 };
 
+namespace detail {
+
+template <typename T>
+inline void print_one_byte(std::ostream &os, T v) {
+   os << static_cast<int>(static_cast<typename std::make_unsigned<T>::type>(v));
+}
+
+template <>
+inline void print_one_byte(std::ostream &os, bool v) {
+   os << static_cast<unsigned>(v);
+}
+
+} // namespace detail
+
 template <typename T, typename WithPrefix, typename DoFill, typename InUpperCase>
 std::ostream &operator<<(std::ostream &os, const integral_hex_writer<T, WithPrefix, DoFill, InUpperCase> &v) {
    format_backup backup(os);
@@ -152,7 +166,7 @@ std::ostream &operator<<(std::ostream &os, const integral_hex_writer<T, WithPref
       // casting without a risk of being printed out as an ASCII character
       os << v.value_;
    } else {
-      os << static_cast<int>(static_cast<typename std::make_unsigned<T>::type>(v.value_));
+      detail::print_one_byte(os, v.value_);
    }
    return os;
 }

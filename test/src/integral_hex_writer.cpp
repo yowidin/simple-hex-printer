@@ -16,6 +16,12 @@ using namespace std;
 TEST_CASE("Full Printing", "[integral_hex_writer]") {
    ostringstream os;
 
+   SECTION("bool") {
+      const bool v = true;
+      os << shp::integral_hex_writer<decltype(v)>{v};
+      REQUIRE(os.str() == "0x01");
+   }
+
    SECTION("char") {
       const char v = 'a';
       os << shp::integral_hex_writer<decltype(v)>{v};
@@ -92,6 +98,11 @@ TEST_CASE("Full Printing", "[integral_hex_writer]") {
 TEST_CASE("Simplified Printing", "[integral_hex_writer]") {
    ostringstream os;
 
+   SECTION("bool") {
+      os << shp::hex(true) << " " << shp::hex(false);
+      REQUIRE(os.str() == "0x01 0x00");
+   }
+
    SECTION("char") {
       const char v = 'a';
       os << shp::hex(v);
@@ -130,6 +141,11 @@ TEST_CASE("Simplified Printing", "[integral_hex_writer]") {
 }
 
 TEST_CASE("String conversion", "[integral_hex_writer]") {
+   SECTION("bool") {
+      const bool v = false;
+      REQUIRE(shp::hex_str(v) == "0x00");
+   }
+
    SECTION("char") {
       const char v = 'a';
       REQUIRE(shp::hex_str(v) == "0x61");
